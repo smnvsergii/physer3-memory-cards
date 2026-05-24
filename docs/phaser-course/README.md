@@ -1,81 +1,52 @@
-# 🎮 Курс по Phaser 3 — от нуля до прототипа слота
+# 🎮 Phaser 3 Course
 
-Полный учебный курс по Phaser 3 на русском языке. Каждая глава содержит:
-- **Теорию** — что и зачем
-- **Код-примеры** — рабочие сниппеты, которые можно копировать
-- **Практику** — задания для закрепления
+A complete Phaser 3 learning course aimed at game development, with a focus on slot games.
 
-Цель курса — после прохождения вы сможете самостоятельно собрать слот-игру или любую 2D игру на Phaser 3.
+## 🌐 Language
 
----
+Pick your language:
 
-## 📚 Программа курса
+- 🇬🇧 **[English](./en/README.md)** — full course in English
+- 🇺🇦 **[Українська](./uk/README.md)** — повний курс українською
 
-### Часть 1. Основы
-- [Глава 0. Введение в Phaser](./00-introduction.md) — что это, история, экосистема, когда использовать
-- [Глава 1. Настройка проекта](./01-setup.md) — Vite, структура, первый запуск
-- [Глава 2. Game Config](./02-game-config.md) — конфигурация игры, рендереры
-- [Глава 3. Сцены (Scenes)](./03-scenes.md) — жизненный цикл, переключение, передача данных
+Each version contains:
+- 15 chapters (theory + working code + exercises)
+- A combined single-file version for offline reading on your phone
+- The same structure and content, only translated
 
-### Часть 2. Контент
-- [Глава 4. Загрузка ассетов (Loader)](./04-assets.md) — изображения, атласы, аудио, шрифты
-- [Глава 5. Display Objects](./05-display-objects.md) — Sprite, Image, Graphics, Text, Container
-- [Глава 6. Анимации и Tweens](./06-animations-tweens.md) — sprite-анимации, плавные движения
+## 📚 Course outline (overview)
 
-### Часть 3. Взаимодействие
-- [Глава 7. Ввод (Input)](./07-input.md) — мышь, тач, drag&drop, клавиатура
-- [Глава 8. Звук](./08-sound.md) — Sound Manager, sprite sounds
-- [Глава 9. Камера](./09-camera.md) — scroll, zoom, эффекты
-- [Глава 10. Scale Manager](./10-scale-manager.md) — адаптивность, mobile/desktop
+1. Introduction to Phaser
+2. Project setup (Vite)
+3. Game Config
+4. Scenes
+5. Asset loading (Loader)
+6. Display Objects
+7. Animations and Tweens
+8. Input
+9. Sound
+10. Camera
+11. Scale Manager (responsiveness)
+12. Particle System
+13. Physics
+14. Architecture and optimization
+15. Slot prototype — final practical project
 
-### Часть 4. Расширенное
-- [Глава 11. Particle System](./11-particles.md) — эмиттеры, эффекты выигрыша
-- [Глава 12. Физика (Arcade)](./12-physics.md) — коллизии, тела, группы
-- [Глава 13. Архитектура и оптимизация](./13-architecture.md) — паттерны, pooling, профилирование
+## 🎯 How to study
 
-### Часть 5. Практический проект
-- [Глава 14. Прототип слота на Phaser](./14-slot-prototype.md) — собираем reels, win-логику, анимации
+1. Pick a language above
+2. Read each chapter in order — theory → code → exercise
+3. **Always do the exercises**
+4. After Chapter 14 you'll have a working slot prototype
 
----
+## 🛠 Version
 
-## 🎯 Как заниматься
+The course targets **Phaser 3.80+**.
 
-1. Читай главу подряд — теория → код → упражнение
-2. **Обязательно делай практику.** Без неё материал не закрепится
-3. Каждое упражнение пиши с нуля, не копируй из главы
-4. После каждых 3–4 глав возвращайся к старому коду и улучшай его
-5. После Главы 14 — построй свой собственный мини-слот без подсказок
+## 📥 Want a single file for offline reading?
 
-## ⏱ Примерный темп
+Each language has a combined file:
+- [English single file](./en/phaser-course-full.md)
+- [Ukrainian single file](./uk/phaser-course-full.md)
 
-| Часть | Время (часов) |
-|---|---|
-| Часть 1 (Основы) | 6–8 ч |
-| Часть 2 (Контент) | 8–10 ч |
-| Часть 3 (Взаимодействие) | 10–12 ч |
-| Часть 4 (Расширенное) | 8–10 ч |
-| Часть 5 (Слот) | 15–20 ч |
-| **Итого** | **~50–60 ч** (4–6 недель по часу-два в день) |
-
-## 🔗 Полезные ссылки
-
-- [Официальная документация Phaser 3](https://phaser.io/docs/3)
-- [API Reference](https://newdocs.phaser.io/docs/3.80.0)
-- [Phaser Examples (более 1700 примеров)](https://phaser.io/examples)
-- [Phaser Discord](https://discord.gg/phaser)
-
-## 🛠 Версия
-
-Курс рассчитан на **Phaser 3.80+** (актуальная стабильная). Если у вас другая версия — смотрите changelog, базовые принципы остаются те же.
-
-## 📥 Скачать одним файлом
-
-Если хочется читать офлайн на телефоне в одном документе:
-
-👉 [phaser-course-full.md](./phaser-course-full.md) — все 15 глав в одном файле (~175 КБ)
-
-На телефоне: открой ссылку → "Raw" → меню браузера → "Сохранить страницу" / "Поделиться → Сохранить в файлы". Любая Markdown-читалка (Obsidian, iA Writer, Markor) откроет.
-
----
-
-Удачи в обучении! 🚀
+On your phone: open the link → "Raw" → browser menu → Save / Share. Any Markdown reader (Obsidian, iA Writer, Markor) will open it.
