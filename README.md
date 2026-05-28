@@ -36,6 +36,58 @@ npm run format       # Prettier
 npm run format:check
 ```
 
+## Tooling & config files
+
+A quick map of every config in the repo and what it's for.
+
+| File                       | Purpose                                                                                     |
+| -------------------------- | ------------------------------------------------------------------------------------------- |
+| `package.json`             | manifest, scripts, dependencies                                                             |
+| `package-lock.json`        | exact versions of installed deps (commit it)                                                |
+| `tsconfig.json`            | TypeScript compiler options (target, strict, paths)                                         |
+| `vite.config.ts`           | Vite dev/build config (port, manual chunking for Phaser)                                    |
+| `eslint.config.js`         | ESLint v9 flat config (type-aware rules for `src/`)                                         |
+| `.prettierrc.json`         | Prettier formatting rules (quotes, indent, line width)                                      |
+| `.prettierignore`          | files Prettier skips (`dist`, `node_modules`, `public`)                                     |
+| `.editorconfig`            | per-editor defaults (charset, EOL, indent) — picked up by VS Code, JetBrains, Sublime, etc. |
+| `.nvmrc`                   | Node version pin — `nvm use` reads it                                                       |
+| `.gitignore`               | files git doesn't track (`node_modules`, `dist`, env, IDE caches)                           |
+| `.env.example`             | template for `.env` (real `.env` is gitignored)                                             |
+| `.husky/pre-commit`        | git hook that runs `lint-staged` before each commit                                         |
+| `.lintstagedrc.json`       | tells `lint-staged` to run `eslint --fix` + Prettier on staged files only                   |
+| `.github/workflows/ci.yml` | GitHub Actions: lint → format check → typecheck → build on every push/PR                    |
+| `LICENSE`                  | MIT                                                                                         |
+
+Why so many small files instead of a few bigger ones: each tool reads its
+own config, and that's the path of least friction. Mixing them into
+`package.json` works for some (Prettier, lint-staged) but not all (Vite,
+TS, ESLint). Keeping them separate also makes it obvious what each tool
+owns.
+
+### How they interact at commit time
+
+```
+git commit
+  └─> .husky/pre-commit
+        └─> npx lint-staged          # reads .lintstagedrc.json
+              ├─> eslint --fix       # uses eslint.config.js
+              └─> prettier --write   # uses .prettierrc.json + .prettierignore
+```
+
+If any step fails, the commit is blocked.
+
+### How they interact in CI
+
+```
+push / PR
+  └─> .github/workflows/ci.yml
+        ├─> npm ci                   # uses package-lock.json
+        ├─> npm run lint             # eslint.config.js
+        ├─> npm run format:check     # .prettierrc.json
+        ├─> npm run typecheck        # tsconfig.json
+        └─> npm run build            # tsconfig.json + vite.config.ts
+```
+
 ## Project structure
 
 ```
