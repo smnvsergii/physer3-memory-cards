@@ -1,0 +1,28 @@
+html,
+body {
+    padding: 0;
+    margin: 0;
+    background: #000;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+canvas {
+    display: block;
+}
+
+@font-face {
+    font-family: 'CurseCasual';
+    src: url('/assets/fonts/CurseCasual.ttf') format('truetype');
+    font-display: block;
+}
+
+/* Off-screen element forces the browser to load the font before Phaser
+   creates text objects with it. */
+.font-preload {
+    font-family: 'CurseCasual', sans-serif;
+    position: absolute;
+    left: -100px;
+    top: -100px;
+}

@@ -1,12 +1,36 @@
 {
-  "name": "memory-cards",
-  "version": "1.0.0",
-  "description": "A small memory match game built with Phaser 3 — first step toward learning game development.",
-  "private": true,
-  "scripts": {
-    "start": "npx http-server -p 8001 -c-1 -o",
-    "start:python": "python3 -m http.server 8000"
-  },
-  "keywords": ["phaser", "game", "memory"],
-  "author": "smnvs"
+    "name": "memory-cards",
+    "version": "2.0.0",
+    "description": "Memory match game (Phaser 3) — runs standalone or as an MFE inside the Game Hub shell.",
+    "private": true,
+    "type": "module",
+    "engines": {
+        "node": ">=22"
+    },
+    "scripts": {
+        "dev": "vite",
+        "build": "tsc -b && vite build",
+        "preview": "vite preview",
+        "lint": "eslint .",
+        "lint:fix": "eslint . --fix",
+        "format": "prettier --write .",
+        "format:check": "prettier --check .",
+        "typecheck": "tsc -b --noEmit",
+        "prepare": "husky || true"
+    },
+    "dependencies": {
+        "phaser": "^3.90.0"
+    },
+    "devDependencies": {
+        "@eslint/js": "^10.0.1",
+        "eslint": "^10.4.0",
+        "eslint-config-prettier": "^10.1.8",
+        "globals": "^17.6.0",
+        "husky": "^9.1.7",
+        "lint-staged": "^17.0.5",
+        "prettier": "^3.8.3",
+        "typescript": "^5.6.0",
+        "typescript-eslint": "^8.60.0",
+        "vite": "^8.0.14"
+    }
 }

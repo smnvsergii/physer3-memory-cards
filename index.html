@@ -1,46 +1,14 @@
 <!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8" />
-    <title>Memory Game</title>
-    <style>
-        html, body {
-            padding: 0;
-            margin: 0;
-            background: #000;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-        }
-        canvas {
-            display: block;
-        }
-        @font-face {
-            font-family: 'CurseCasual';
-            src: url('assets/fonts/CurseCasual.ttf');
-        }
-        .fontPreload {
-            font-family: 'CurseCasual', sans-serif;
-            position: absolute;
-            left: -100px;
-        }
-    </style>
-</head>
-<body>
-    <div class="fontPreload">.</div>
-
-    <!-- Phaser via CDN (versioned) -->
-    <script src="https://cdn.jsdelivr.net/npm/phaser@3.90.0/dist/phaser.min.js"></script>
-
-    <!-- MFE bridge (postMessage protocol) -->
-    <script src="src/mfe/bridge.js"></script>
-
-    <!-- Game source -->
-    <script src="src/config.js"></script>
-    <script src="src/objects/Card.js"></script>
-    <script src="src/scenes/BootScene.js"></script>
-    <script src="src/scenes/PreloadScene.js"></script>
-    <script src="src/scenes/GameScene.js"></script>
-    <script src="src/main.js"></script>
-</body>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Memory Game</title>
+    </head>
+    <body>
+        <!-- Forces the browser to load the custom font before the game uses it. -->
+        <div class="font-preload">.</div>
+        <div id="game"></div>
+        <script type="module" src="/src/main.ts"></script>
+    </body>
 </html>

@@ -1,125 +1,138 @@
 # Memory Cards
 
-My first Phaser project. A small memory match game built as a stepping stone toward more complex games (slots being the goal). Coming from a React / front-end background, I used this project to learn the Phaser scene lifecycle, asset loading, sprite animation, and audio.
+A small memory match game built with Phaser 3. Runs **standalone** in the
+browser or **embedded** as a microfrontend inside the
+[Game Hub](../game-hub) shell, which talks to it via `postMessage`.
+
+This is also my first Phaser project — a stepping stone toward more complex
+games (slots being the goal). Coming from a React / front-end background,
+I used it to learn the Phaser scene lifecycle, asset loading, sprite
+animation, and audio.
 
 ## Stack
 
-- [Phaser 3.90](https://phaser.io/) — loaded via CDN
-- Vanilla JS (no build step yet)
+- Phaser 3.90
+- TypeScript 5
+- Vite 8 (Rolldown)
+- ESLint v9 (flat config) + Prettier
+- Husky + lint-staged (pre-commit hook)
 - LocalStorage for best-time persistence
 
-## How to run
+## Requirements
 
-No bundler, no `npm install`. Any static server works.
+- Node >= 22 (see `.nvmrc`)
+
+## Scripts
 
 ```bash
-# Python (preinstalled on macOS)
-python3 -m http.server 8000
-
-# or via Node
-npx http-server -p 8000
+npm install
+npm run dev          # start dev server on http://localhost:8001
+npm run build        # type-check + production build (dist/)
+npm run preview      # serve the production build locally
+npm run typecheck    # tsc, no emit
+npm run lint         # ESLint
+npm run lint:fix
+npm run format       # Prettier
+npm run format:check
 ```
-
-Open `http://localhost:8000`.
-
-> WebStorm users can right-click `index.html` → Open in Browser to use the built-in static server.
 
 ## Project structure
 
 ```
-MemoryCards/
+memory-cards/
+├── public/
+│   └── assets/             # served as-is (Vite static)
+│       ├── fonts/
+│       ├── sounds/
+│       └── sprites/
 ├── src/
-│   ├── main.js              # entry point, registers scenes
-│   ├── config.js            # game-wide constants
+│   ├── main.ts             # entry point: bridge + Phaser game
+│   ├── config.ts           # game-wide constants (incl. MFE settings)
+│   ├── styles.css
+│   ├── mfe/
+│   │   ├── protocol.ts     # typed wire protocol shared with the shell
+│   │   └── bridge.ts       # MFE-side postMessage wrapper
 │   ├── objects/
-│   │   └── Card.js          # Sprite subclass with flip/move animations
+│   │   └── Card.ts
 │   └── scenes/
-│       ├── BootScene.js     # bootstrap
-│       ├── PreloadScene.js  # asset loading + progress bar
-│       └── GameScene.js     # gameplay
-├── assets/
-│   ├── fonts/
-│   ├── sounds/
-│   └── sprites/
-└── index.html
+│       ├── BootScene.ts
+│       ├── PreloadScene.ts
+│       └── GameScene.ts
+├── index.html
+├── tsconfig.json
+├── vite.config.ts
+└── eslint.config.js
 ```
 
-The three-scene split (`Boot → Preload → Game`) is the same pattern used in larger Phaser projects, including slots. Keeping it tiny here as a template.
+The three-scene split (`Boot → Preload → Game`) is the same pattern used in
+larger Phaser projects.
 
 ## Gameplay
 
 - 5 pairs, 60-second timer
-- Match all pairs to win - best time is saved to `localStorage` and shown next to the running timer
-
-## What I learned
-
-- Phaser's scene lifecycle: `preload` / `create` / `update` and how to delegate loading to a dedicated scene
-- Sprite scaling via `setDisplaySize` so the same code handles textures of different sizes
-- Tween-based animation (move, flip) and how `scaleX: 0 → 1` produces a card flip
-- Browser autoplay policy and why an audio context can't start before a user gesture
-- Cache busting and how Phaser handles missing texture files silently (one of the trickier bugs to debug)
-
-## Roadmap
-
-- [x] Wrap as a microfrontend embedded into a shell app via iframe + `postMessage`
-- [ ] Migrate to Vite + ES modules
-- [ ] Add TypeScript
-- [ ] Replace globals with `import` / `export`
-- [ ] Move on to a slot prototype using the same architecture
+- Match all pairs to win — best time persists in `localStorage`
 
 ## MFE / shell integration
 
-The game can run standalone (open `index.html` directly) or embedded in a
-shell application via `<iframe>`. Communication uses `window.postMessage`
-through a thin wrapper, `MFEBridge` (`src/mfe/bridge.js`).
+The game can run standalone or embedded in a shell via `<iframe>`.
+Communication uses `window.postMessage` through `MFEBridge`
+(`src/mfe/bridge.ts`).
 
 ### Message envelope
 
-```js
-const message = {
-  source:  'memory-cards', // sender id
-  target:  'memory-cards', // optional; used by shell to address one MFE
-  version: 1,              // protocol version
-  type:    'win',          // event/command name
-  payload: { time: 42 },
-};
+```ts
+interface MFEEnvelope<T extends string, P> {
+    source: string; // sender id ("memory-cards", "shell", ...)
+    target?: string; // optional recipient id
+    version: number;
+    type: T;
+    payload: P;
+}
 ```
-
-`target` is optional. The shell omits it for broadcasts and sets it to a
-specific MFE id when addressing one game.
 
 ### Commands (shell → MFE)
 
-| type        | payload               | effect                          |
-|-------------|-----------------------|---------------------------------|
-| `pause`     | —                     | pauses the active scene & theme |
-| `resume`    | —                     | resumes the active scene        |
-| `restart`   | —                     | restarts the round              |
-| `mute`      | `{ muted: boolean }`  | toggles all sounds              |
-| `setVolume` | `{ volume: 0..1 }`    | sets master volume              |
+| type        | payload              | effect                          |
+| ----------- | -------------------- | ------------------------------- |
+| `pause`     | —                    | pauses the active scene & theme |
+| `resume`    | —                    | resumes the active scene        |
+| `restart`   | —                    | restarts the round              |
+| `mute`      | `{ muted: boolean }` | toggles all sounds              |
+| `setVolume` | `{ volume: 0..1 }`   | sets master volume              |
 
 ### Events (MFE → shell)
 
-| type              | payload                                      |
-|-------------------|----------------------------------------------|
-| `ready`           | `{ mfeId, version, bestTime, timeout }`      |
-| `gameStart`       | `{ timeout }`                                |
-| `match`           | `{ value, matched, total }`                  |
-| `mismatch`        | `{ values: [a, b] }`                         |
-| `win`             | `{ time }`                                   |
-| `timeout`         | —                                            |
-| `bestTimeUpdated` | `{ bestTime }`                               |
-| `paused`          | —                                            |
-| `resumed`         | —                                            |
-| `muteChanged`     | `{ muted }`                                  |
-| `volumeChanged`   | `{ volume }`                                 |
+| type                 | payload                                 |
+| -------------------- | --------------------------------------- |
+| `ready`              | `{ mfeId, version, bestTime, timeout }` |
+| `gameStart`          | `{ timeout }`                           |
+| `match`              | `{ value, matched, total }`             |
+| `mismatch`           | `{ values: [a, b] }`                    |
+| `win`                | `{ time }`                              |
+| `timeout`            | —                                       |
+| `bestTimeUpdated`    | `{ bestTime }`                          |
+| `paused` / `resumed` | —                                       |
+| `muteChanged`        | `{ muted }`                             |
+| `volumeChanged`      | `{ volume }`                            |
 
 ### Origin policy
 
-Configure allowed shell origins in `src/config.js` under `mfe.allowedShellOrigins`.
-An empty list (the default) accepts any origin and logs a warning — convenient
-for local dev, never for production.
+`GameConfig.mfe.allowedShellOrigins` in `src/config.ts` controls which
+origins this MFE accepts commands from. Empty list = any (dev only).
 
-## Notes
+## What I learned
 
-`assets/scripts/phaser.js` was originally vendored locally (~7.5 MB) which made `git push` fail with HTTP 400. Switched to CDN and added `.gitignore` to keep the repo clean.
+- Phaser scene lifecycle (`preload` / `create` / `update`) and delegating
+  loading to a dedicated scene
+- Sprite scaling via `setDisplaySize`
+- Tween-based animation (move, flip) and how `scaleX: 0 → 1` produces the
+  card-flip effect
+- Browser autoplay policy and the audio-context user-gesture requirement
+- Typing Phaser with TypeScript — strict mode without fighting the API
+- Building a typed `postMessage` protocol for MFE communication
+
+## Roadmap
+
+- [x] TypeScript + Vite + ES modules
+- [x] Wrap as a microfrontend embedded into a shell via iframe + postMessage
+- [ ] Move on to a slot prototype using the same architecture
